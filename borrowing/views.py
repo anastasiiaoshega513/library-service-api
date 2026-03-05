@@ -31,10 +31,13 @@ class BorrowingViewSet(
         return BorrowingListSerializer
 
     def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        if not user.is_staff:
+            queryset = queryset.filter(user=user)
+
         user_id = self.request.query_params.get("user_id")
         is_active = self.request.query_params.get("is_active")
-
-        queryset = self.queryset
 
         if user_id:
             queryset = queryset.filter(user__id=user_id)
