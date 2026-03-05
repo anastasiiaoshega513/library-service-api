@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "user",
     "library",
     "rest_framework_simplejwt",
+    "borrowing",
 ]
 
 MIDDLEWARE = [
