@@ -17,11 +17,32 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+from rest_framework.routers import DefaultRouter
+
+from borrowing.views import BorrowingViewSet
+from library.views import BookViewSet
+
+router = DefaultRouter()
+router.register("books", BookViewSet, basename="books")
+router.register("borrowings", BorrowingViewSet, basename="borrowings")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
-    path("api/library/", include("library.urls", namespace="library")),
+    path("api/", include(router.urls)),
     path("api/user/", include("user.urls", namespace="user")),
-    path("api/borrowing/", include("borrowing.urls", namespace="borrowing")),
+    path("api/doc/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/doc/swagger/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "api/doc/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
+    ),
 ]

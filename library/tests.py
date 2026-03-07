@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 
 from library.models import Book
 
-BOOK_URL = reverse("library:book-list")
+BOOK_URL = reverse("books-list")
 
 
 def sample_book(**params):
@@ -23,7 +23,7 @@ def sample_book(**params):
 
 
 def book_detail_url(book_id):
-    return reverse("library:book-detail", args=[book_id])
+    return reverse("books-detail", args=[book_id])
 
 
 class GeneralBookApiTests(APITestCase):

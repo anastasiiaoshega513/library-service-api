@@ -1,5 +1,7 @@
 from datetime import date
 
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -49,6 +51,30 @@ class BorrowingViewSet(
 
         return queryset.distinct()
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "user_id",
+                type=OpenApiTypes.INT,
+                description="Filter by user id (ex. ?user_id=1)",
+            ),
+            OpenApiParameter(
+                "is_active",
+                type=OpenApiTypes.STR,
+                description="Filter by active borrowings (ex. ?is_active=true or ?is_active=false)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @extend_schema(
+        request=None,
+        responses={
+            200: OpenApiResponse(description="Returned"),
+            400: OpenApiResponse(description="Already returned"),
+        },
+    )
     @action(
         detail=True,
         methods=["post"],
@@ -58,11 +84,10 @@ class BorrowingViewSet(
         borrowing = self.get_object()
         book = borrowing.book
 
-        book.inventory += 1
-        book.save()
-
         if not borrowing.actual_return_date:
             borrowing.actual_return_date = date.today()
+            book.inventory += 1
+            book.save()
             borrowing.save()
             return Response("Returned", status=status.HTTP_200_OK)
         else:
