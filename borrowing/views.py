@@ -58,11 +58,10 @@ class BorrowingViewSet(
         borrowing = self.get_object()
         book = borrowing.book
 
-        book.inventory += 1
-        book.save()
-
         if not borrowing.actual_return_date:
             borrowing.actual_return_date = date.today()
+            book.inventory += 1
+            book.save()
             borrowing.save()
             return Response("Returned", status=status.HTTP_200_OK)
         else:
