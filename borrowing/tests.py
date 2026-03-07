@@ -7,7 +7,7 @@ from borrowing.models import Borrowing
 from borrowing.serializers import BorrowingListSerializer
 from library.tests import sample_book
 
-BORROWING_URL = reverse("borrowing:borrowing-list")
+BORROWING_URL = reverse("borrowings-list")
 
 
 def sample_borrowing(**params):
@@ -22,7 +22,7 @@ def sample_borrowing(**params):
 
 
 def borrowing_detail_url(borrowing_id):
-    return reverse("borrowing:borrowing-detail", args=[borrowing_id])
+    return reverse("borrowings-detail", args=[borrowing_id])
 
 
 # попытка создать
