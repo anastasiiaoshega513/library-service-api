@@ -59,3 +59,11 @@ python manage.py runserver
   "password": "your_password"
 }
 ```
+
+## Run with Docker
+
+This project can be run locally using Docker (Django + PostgreSQL).
+
+```bash
+docker compose up --build
+```
